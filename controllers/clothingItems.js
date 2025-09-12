@@ -1,32 +1,43 @@
 const ClothingItem = require("../models/clothingItem");
+const {
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  OK,
+  CREATED,
+  NOT_FOUND,
+} = require("../utils/errors");
 
 const createItem = (req, res) => {
-  console.log(req);
-  console.log(req.body);
+  // ...existing code...
 
   const { name, weather, imageUrl } = req.body;
-  const owner = req.user._id;
+  // ...existing code...
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
-      console.log(item);
+      // ...existing code...
       res.send({ data: item });
     })
-    .catch((err) =>
-      res
-        .status(500)
-        .send({ message: "Error from createItem", error: err.message })
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid data passed to create item" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
-    .catch((err) =>
-      res
-        .status(500)
-        .send({ message: "Error from getItems", error: err.message })
-    );
+    .then((items) => res.status(OK).send(items))
+    .catch((err) => {
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const deleteItem = (req, res) => {
@@ -34,12 +45,22 @@ const deleteItem = (req, res) => {
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then(() => res.status(204).send())
-    .catch((err) =>
+    .then((deletedItem) =>
       res
-        .status(500)
-        .send({ message: "Error from deleteItem", error: err.message })
-    );
+        .status(OK)
+        .send({ message: "Item deleted successfully", data: deletedItem })
+    )
+    .catch((err) => {
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid item ID" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const likeItem = (req, res) => {
@@ -53,11 +74,22 @@ const likeItem = (req, res) => {
   )
     .orFail()
     .then((item) => res.status(200).send(item))
-    .catch((err) =>
-      res
-        .status(500)
-        .send({ message: "Error from likeItem", error: err.message })
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid data passed to like item" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid item ID" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const unlikeItem = (req, res) => {
@@ -71,11 +103,22 @@ const unlikeItem = (req, res) => {
   )
     .orFail()
     .then((item) => res.status(200).send(item))
-    .catch((err) =>
-      res
-        .status(500)
-        .send({ message: "Error from unlikeItem", error: err.message })
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid data passed to unlike item" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid item ID" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 module.exports = {
