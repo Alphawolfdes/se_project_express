@@ -11,12 +11,11 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(OK).send(users))
-    .catch((err) => {
-      // ...existing code...
-      return res
+    .catch(() =>
+      res
         .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
+        .send({ message: "An error has occurred on the server." })
+    );
 };
 
 const createUser = (req, res) => {
@@ -24,8 +23,8 @@ const createUser = (req, res) => {
 
   User.create({ name, avatar })
     .then((user) => res.status(CREATED).send(user))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
+    .catch((error) => {
+      if (error.name === "ValidationError") {
         return res
           .status(BAD_REQUEST)
           .send({ message: "Invalid data passed to create user" });
@@ -44,7 +43,7 @@ const getUser = (req, res) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
-      res.status(OK).send(user);
+      return res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {

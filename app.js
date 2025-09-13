@@ -18,10 +18,10 @@ async function startServer() {
 
     app.use("/", mainRouter);
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      // Server started
     });
   } catch (err) {
-    console.error("Failed to connect to MongoDB", err);
+    // Failed to connect to MongoDB
   }
 }
 
