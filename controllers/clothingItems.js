@@ -1,6 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
 const {
   BAD_REQUEST,
+  FORBIDDEN,
   INTERNAL_SERVER_ERROR,
   OK,
   NOT_FOUND,
@@ -40,20 +41,23 @@ const getItems = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  const { itemId } = req.params;
-
-  ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then((deletedItem) =>
-      res
-        .status(OK)
-        .send({ message: "Item deleted successfully", data: deletedItem })
-    )
-    .catch((error) => {
-      if (error.name === "DocumentNotFoundError") {
+  ClothingItem.findById(req.params.itemId)
+    .then((item) => {
+      if (!item) {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
-      if (error.name === "CastError") {
+      // Check if the logged-in user is the owner
+      if (item.owner.toString() !== req.user._id) {
+        return res.status(FORBIDDEN).send({
+          message: "You do not have permission to delete this item.",
+        });
+      }
+      return ClothingItem.findByIdAndDelete(req.params.itemId).then(
+        (deletedItem) => res.status(OK).send(deletedItem)
+      );
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid item ID" });
       }
       return res
