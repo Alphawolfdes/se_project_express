@@ -6,6 +6,7 @@ const UNAUTHORIZED = 401;
 const FORBIDDEN = 403;
 const CREATED = 201;
 const OK = 200;
+const CONFLICT = 409; // <-- Add this line
 
 module.exports = {
   BAD_REQUEST,
@@ -15,4 +16,5 @@ module.exports = {
   FORBIDDEN,
   CREATED,
   OK,
+  CONFLICT, // <-- Add this line
 };

@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    minlength: 2, // Enforce minimum length
+    maxlength: 30, // Enforce maximum length
   },
   email: {
     type: String,
@@ -20,6 +22,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
+  },
+  avatar: {
+    type: String,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: "Invalid URL format for avatar",
+    },
   },
 });
 
