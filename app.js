@@ -2,8 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
-const clothingItemsRouter = require("./routes/clothingItems"); // <-- Import clothing items router
-const { login, createUser } = require("./controllers/users");
+const { login, createUser, getItems } = require("./controllers/users"); // Import getItems controller
 const auth = require("./middlewares/auth");
 
 const app = express();
@@ -18,7 +17,7 @@ async function startServer() {
     // Public routes (no auth)
     app.post("/signin", login);
     app.post("/signup", createUser);
-    app.use("/items", clothingItemsRouter); // <-- Only /items is public
+    app.get("/items", getItems); // <-- Only GET /items is public
 
     // Protect all other routes
     app.use(auth);

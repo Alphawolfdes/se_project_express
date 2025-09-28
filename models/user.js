@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    required: true, // <-- Make avatar required
     validate: {
       validator: (v) => validator.isURL(v),
       message: "Invalid URL format for avatar",
@@ -32,7 +33,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(
+  email,
+  password
+) {
   return this.findOne({ email })
     .select("+password")
     .then((user) => {

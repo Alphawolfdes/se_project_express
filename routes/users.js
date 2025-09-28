@@ -1,6 +1,7 @@
 const express = require("express");
-const router = express.Router();
 const { getCurrentUser, updateCurrentUser } = require("../controllers/users");
+
+const router = express.Router();
 
 // Remove these routes:
 // router.post("/", createUser);

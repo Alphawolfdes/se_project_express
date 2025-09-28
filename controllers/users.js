@@ -13,7 +13,7 @@ const {
 const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body; // Include avatar
 
   // Validate required fields
   if (!name || !email || !password) {
@@ -26,7 +26,7 @@ const createUser = (req, res) => {
   return bcrypt
     .hash(password, 10)
     .then((hash) =>
-      User.create({ name, email, password: hash })
+      User.create({ name, email, password: hash, avatar }) // Pass avatar to User.create
         .then((user) => {
           const userData = user.toObject();
           delete userData.password; // This removes password from response
@@ -73,9 +73,16 @@ const login = (req, res) => {
       });
       res.send({ token });
     })
-    .catch(() =>
-      res.status(UNAUTHORIZED).send({ message: "Incorrect email or password." })
-    );
+    .catch((err) => {
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED)
+          .send({ message: "Incorrect email or password." });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const getCurrentUser = (req, res) => {
