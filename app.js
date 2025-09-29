@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
-const { login, createUser, getItems } = require("./controllers/users"); // Import getItems controller
+const { login, createUser } = require("./controllers/users"); // Correct import
+const { getItems } = require("./controllers/clothingItems"); // Correct import
 const auth = require("./middlewares/auth");
 
 const app = express();
