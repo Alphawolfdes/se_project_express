@@ -1,5 +1,6 @@
 const express = require("express");
 const { getCurrentUser, updateCurrentUser } = require("../controllers/users");
+const { validateUserInfoBody } = require("../middlewares/validation");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 // router.get("/:id", getUser);
 
 router.get("/me", getCurrentUser);
-router.patch("/me", updateCurrentUser);
+router.patch("/me", validateUserInfoBody, updateCurrentUser);
 
 // ...other user-related routes if needed...
 
