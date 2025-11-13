@@ -110,11 +110,6 @@ const validateUserInfoBody = celebrate({
   }),
 });
 
-// For routes like /items/:id or /users/:id
-app.get("/items/:id", validateId, getItemById);
-app.delete("/items/:id", validateId, deleteItem);
-app.get("/users/:id", validateId, getUserById);
-
 module.exports = {
   validateCardBody,
   validateUserBody,
