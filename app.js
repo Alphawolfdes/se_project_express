@@ -26,6 +26,13 @@ async function startServer() {
     // enable request logger
     app.use(requestLogger);
 
+    // Crash test endpoint (for testing PM2 auto-recovery)
+    app.get("/crash-test", () => {
+      setTimeout(() => {
+        throw new Error("Server will crash now");
+      }, 0);
+    });
+
     // Public routes (no auth)
     app.post("/signin", validateAuthentication, login);
     app.post("/signup", validateUserBody, createUser);

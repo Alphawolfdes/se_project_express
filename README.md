@@ -1,5 +1,15 @@
 # WTWR (What to Wear?): Back End
 
+## Deployed Project
+
+**Domain:** [www.weather-app.twilightparadox.com](https://www.weather-app.twilightparadox.com)
+
+## Links
+
+- **Frontend Repository:** [https://github.com/Alphawolfdes/se_project_react](https://github.com/Alphawolfdes/se_project_react)
+
+- **Project Pitch Video:** [https://drive.google.com/file/d/1rKJWdQV36tf1Jf_8j4jo24H3u17VSXNK/view?usp=sharing](https://drive.google.com/file/d/1rKJWdQV36tf1Jf_8j4jo24H3u17VSXNK/view?usp=sharing)
+
 ## Project Name
 
 WTWR (What to Wear?): Back End
