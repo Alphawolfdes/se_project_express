@@ -1,5 +1,6 @@
 const errorHandler = (err, req, res, next) => {
   // Log the error to the console
+  // eslint-disable-next-line no-console
   console.error(err);
 
   // Check if the error has a status code, otherwise default to 500
